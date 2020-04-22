@@ -15,8 +15,8 @@ A simple honeypot written in C that logs HTTP basic authentication attempts. Req
 #### Generate SSL Certificate
 
 ```
-$~ openssl genrsa -out localhost.key 1024
-$~ openssl req -days 365 -out server.pem -new -x509 -key localhost.key
+~$ openssl genrsa -out localhost.key 1024
+~$ openssl req -days 365 -out server.pem -new -x509 -key localhost.key
 ```
 
 #### Compile
@@ -34,9 +34,11 @@ $~ openssl req -days 365 -out server.pem -new -x509 -key localhost.key
 ```
 
 
-**<port>** server port
-**<key>** private key 
-**<cert>** self-signed cert
+**\<port\>** server port
+  
+**\<key\>** private key 
+  
+**\<cert\>** self-signed cert
 
 #### Example
 
@@ -47,5 +49,7 @@ $~ openssl req -days 365 -out server.pem -new -x509 -key localhost.key
 ## Logs
 
 **error.log**
+
 Format `[Date-Time] Client IP "User-Agent" user:pass`
+
 Example `[Tue Apr 17 23:59:51 2020] 127.0.0.1 "Wget/1.19.4 (linux-gnu)" john:smith`
