@@ -33,18 +33,13 @@ A simple honeypot written in C that logs HTTP basic authentication attempts. Req
 ~$ ./http-basic-auth-honeypot <port> <key> <cert>
 ```
 
-
-**\<port\>** server port
-  
-**\<key\>** private key 
-  
-**\<cert\>** self-signed cert
-
 #### Example
 
 ```
 ~$ ./http-basic-auth-honeypot 8080 localhost.key localhost.pem
 ```
+
+Enter any key to exit the program.
 
 ## Logs
 
