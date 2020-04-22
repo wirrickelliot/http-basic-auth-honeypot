@@ -16,7 +16,7 @@ A simple honeypot written in C that logs HTTP basic authentication attempts. Req
 
 ```
 ~$ openssl genrsa -out localhost.key 1024
-~$ openssl req -days 365 -out server.pem -new -x509 -key localhost.key
+~$ openssl req -days 365 -out localhost.pem -new -x509 -key localhost.key
 ```
 
 #### Compile
@@ -43,7 +43,7 @@ Enter any key to exit the program.
 
 ## Logs
 
-**error.log**
+**auth.log**
 
 Format `[Date-Time] Client IP "User-Agent" user:pass`
 
