@@ -10,53 +10,48 @@
 #define PAGE "401 Unauthorized\n\n"
 
 static int ahc_echo(void * cls,
-		    struct MHD_Connection * connection,
-		    const char * url,
-		    const char * method,
-                    const char * version,
-		    const char * upload_data,
-		    size_t * upload_data_size,
-                    void ** ptr) {
+		struct MHD_Connection * connection,
+		const char * url,
+		const char * method,
+		const char * version,
+		const char * upload_data,
+		size_t * upload_data_size,
+		void ** ptr) {
 	static int dummy;
-	int ret;
 	const char * page = cls;
-	const char * user_agent;
-	char * username;
-	char ** password;
 	struct MHD_Response * response;
+	int ret;
+	char ** password;
+	char * username;
+	const char * user_agent;
 	struct sockaddr_in * so;
 
-
-  	if (0 != strcmp(method, "GET") || 0 != strcmp(method, "HEAD")) return MHD_NO;
+	if (0 != strcmp(method, "GET") || 0 != strcmp(method, "HEAD")) return MHD_NO;
 	if (&dummy != *ptr) {
 		*ptr = &dummy;
 		return MHD_YES;
-  	}
-  	if (0 != *upload_data_size) return MHD_NO;
+	}
+	if (0 != *upload_data_size) return MHD_NO;
+	*ptr = NULL;
 
-  	*ptr = NULL;
-
-	so = (struct sockaddr_in *)MHD_get_connection_info(connection, MHD_CONNECTION_INFO_CLIENT_ADDRESS)->client_addr;
+	so = (struct sockaddr_in *) MHD_get_connection_info(connection, MHD_CONNECTION_INFO_CLIENT_ADDRESS)->client_addr;
 	char * client_ip = inet_ntoa(so->sin_addr);
 
 	user_agent = MHD_lookup_connection_value(connection, MHD_HEADER_KIND, "User-Agent");
-
 	response = MHD_create_response_from_buffer (strlen(page), (void*) page, MHD_RESPMEM_PERSISTENT);
-
-  	ret = MHD_queue_basic_auth_fail_response(connection, "Restricted Content", response);
+	ret = MHD_queue_basic_auth_fail_response(connection, "Restricted Content", response);
 	username = MHD_basic_auth_get_username_password(connection, password);
 
 	time_t now;
 	time(&now);
 
 	FILE * fp = fopen("auth.log", "a");
-	if (username != NULL && password != NULL) 
+	if (username != NULL && password != NULL)
 		fprintf(fp, "[%.*s] %s \"%s\" %s:%s\n", 24, ctime(&now), client_ip, user_agent, username, *password);
 	fclose(fp);
 
-  	MHD_destroy_response(response);
-
-  	return ret;
+	MHD_destroy_response(response);
+	return ret;
 }
 
 static long get_file_size(const char * filename) {
@@ -100,13 +95,14 @@ static char * load_file(const char * filename) {
 	return buffer;
 }
 
+
 int main(int argc, char ** argv) {
 	struct MHD_Daemon * d;
-	char * key_pem;
-	char * cert_pem;
+	char * key_pem, * cert_pem;
+
 
 	if (argc != 4) {
-		printf("%s <port> <key_pem> <cert_pem>\n", argv[0]);
+		printf("%s <port> <key> <cert>\n", argv[0]);
 		return 1;
 	}
 
@@ -121,9 +117,7 @@ int main(int argc, char ** argv) {
 			MHD_OPTION_END);
 
 	if (d == NULL) return 1;
-
-	(void)getc(stdin);
+	(void) getc (stdin);
 	MHD_stop_daemon(d);
-
 	return 0;
 }
